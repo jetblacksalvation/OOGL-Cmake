@@ -9,6 +9,10 @@
 *.idb
 *.pdb
 *.suo
+*.vs
+build\vs2010
+out
+build
 
 # Binaries
 
