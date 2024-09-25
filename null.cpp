@@ -5,7 +5,7 @@
 class Square {
 public:
 	float x, y, w; // Position (x, y) of the top-left corner and width w
-	std::array<float, 12> vertices; // Array to hold the vertices of the square
+	std::array<float,12> vertices; // Array to hold the vertices of the square
 
 	// Constructor
 	Square(float xPos, float yPos, float width) {
@@ -36,9 +36,8 @@ public:
 		vertices[0] = x;        vertices[1] = y;        // Top-left
 		vertices[2] = x + w;    vertices[3] = y;        // Top-right
 		vertices[4] = x + w;    vertices[5] = y - w;    // Bottom-right
-		vertices[6] = x;        vertices[7] = y - w;    // Bottom-left
-		vertices[8] = x;        vertices[9] = y;        // Top-left
-
+		vertices[6] = x;        vertices[7] = y -w;    // Bottom-left
+		vertices[8] = x;		vertices[9] = y;
 	}
 	void drawSelf(GL::Program program, GL::Context& gl)
 	{
@@ -46,7 +45,7 @@ public:
 		GL::VertexArray vao;
 
 		vao.BindAttribute(program.GetAttribute("position"), vbo, GL::Type::Float, 2, 0, 0);
-		gl.DrawArrays(vao, GL::Primitive::LineStrip, 0, 5);
+		gl.DrawArrays(vao, GL::Primitive::TriangleFan, 0, 5);
 	}
 
 };
@@ -61,18 +60,18 @@ int main()
 	GL::Program program(vert, frag);
 	Square square = { -.65,0,0.25f };
 	Square squareEnemy = { .65,0,0.25f };
-	Square squareBall = { 0,0,0.05 };
-	float vx = .01, vy = .01;
+	Square squareBall = { -1,-1,0.05 };
+	float vx =.01, vy =.01; 
 
 	GL::Event ev;
 	while (window.IsOpen())
 	{
-		while (window.GetEvent(ev))
+		while (window.GetEvent(ev)) 
 		{
 			if (1)
 			{
 				if (ev.Key.Code == GL::Key::W) {
-					square.SetPos(square.x, square.y + .1);
+					square.SetPos(square.x, square.y+.1);
 				}
 				if (ev.Key.Code == GL::Key::S) {
 					square.SetPos(square.x, square.y - .1);
@@ -94,7 +93,7 @@ int main()
 			vy *= -1;
 
 		}
-		squareBall.SetPos(squareBall.x + vx, squareBall.y + vy);
+		squareBall.SetPos(squareBall.x+ vx, squareBall.y+vy);
 		window.Present();
 	}
 
