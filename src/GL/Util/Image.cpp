@@ -4,8 +4,8 @@
 #endif
 
 #include <GL/Util/Image.hpp>
-#include <jpeglib.h>
-#include "libpng/png.h"
+#include <GL/Util/libjpeg/jpeglib.h>
+#include <GL/Util/libpng/png.h>
 
 #include <fstream>
 #include <cstring>

@@ -3,4 +3,6 @@ FILE(GLOB OOGL_WINDOW_SOURCE *.cpp)
 target_sources(OOGL_EXE PUBLIC 
 	${OOGL_WINDOW_SOURCE}
 )
-target_link_libraries(OOGL_LIB  ${OOGL_WINDOW_SOURCE})
+target_sources(OOGL_LIB PUBLIC 
+	${OOGL_WINDOW_SOURCE}
+)
