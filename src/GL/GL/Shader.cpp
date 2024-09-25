@@ -21,7 +21,7 @@
 
 #include <GL/GL/Shader.hpp>
 #include <vector>
-
+#include <iostream>
 namespace GL
 {
 	Shader::Shader( const Shader& other )
@@ -69,8 +69,8 @@ namespace GL
 
 		glCompileShader( obj );
 		glGetShaderiv( obj, GL_COMPILE_STATUS, &res );
-
-		if ( res == GL_FALSE )
+		std::cout << GetInfoLog();
+		if ( res == 0 )
 			throw CompileException( GetInfoLog() );
 	}
 

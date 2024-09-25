@@ -25,7 +25,4 @@ lib/
 bin/
 Debug/
 Release/
-/include/GL/GL/Context.hpp
 /.gitignore
-/CMakeLists.txt
-/null.cpp
