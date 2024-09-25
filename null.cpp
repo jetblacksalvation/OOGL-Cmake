@@ -55,7 +55,7 @@ int main()
 	GL::Window window(800, 800, "OpenGL Window", GL::WindowStyle::Close);
 	GL::Context& gl = window.GetContext();
 
-	GL::Shader vert(GL::ShaderType::Vertex, "#version 150\nin vec2 position; void main() { gl_Position = vec4(position, 0.0, 1.0); }");
+	GL::Shader vert(GL::ShaderType::Vertex, "#version 150\nin vec2 position; void main() { gl_TexCoord[0] = gl_MultiTexCoord0;gl_Position = ftransform(); }");
 	GL::Shader frag(GL::ShaderType::Fragment, "#version 150\nout vec4 outColor; void main() { outColor = vec4(1.0, 0.0, 0.0, 1.0); }");
 	GL::Program program(vert, frag);
 	Square square = { -.65,0,0.25f };
@@ -71,7 +71,7 @@ int main()
 			if (1)
 			{
 				if (ev.Key.Code == GL::Key::W) {
-					square.SetPos(square.x, square.y+.1);
+					square.SetPos(square.x, square.y + .1);
 				}
 				if (ev.Key.Code == GL::Key::S) {
 					square.SetPos(square.x, square.y - .1);
@@ -91,7 +91,6 @@ int main()
 		{
 			vx *= -1;
 			vy *= -1;
-
 		}
 		squareBall.SetPos(squareBall.x+ vx, squareBall.y+vy);
 		window.Present();

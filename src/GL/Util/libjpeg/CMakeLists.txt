@@ -3,5 +3,4 @@ FILE(GLOB LIJPEG_HEADERS *.h)
 
 target_sources(OOGL_EXE PUBLIC 
 	${LIJPEG_SOURCE}
-
 )

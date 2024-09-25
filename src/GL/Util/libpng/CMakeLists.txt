@@ -1,5 +1,7 @@
 FILE(GLOB LIBPNG_SOURCE *.c)
+FILE(GLOB LIBPNG_HEADERS *.h)
 
 target_sources(OOGL_EXE PUBLIC 
 	${LIBPNG_SOURCE}
 )
+target_link_libraries(OOGL_LIB ${LIBPNG_SOURCE})

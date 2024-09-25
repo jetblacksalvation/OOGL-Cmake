@@ -1,7 +1,10 @@
-set(OOGL_UTIL_ROOT_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/")
+FILE(GLOB OOGL_UTIL_SOURCE *.cpp)
+
 target_sources(OOGL_EXE PUBLIC 
-	${OOGL_UTIL_ROOT_SOURCE}Image.cpp  ${OOGL_UTIL_ROOT_SOURCE}Mesh.cpp 
+	${OOGL_UTIL_SOURCE}
 )
+target_link_libraries(OOGL_LIB ${OOGL_UTIL_SOURCE})
+
 
 add_subdirectory("libjpeg")
 add_subdirectory("libpng")
