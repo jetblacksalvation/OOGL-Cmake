@@ -5,7 +5,7 @@ project(OOGL LANGUAGES CXX C)
 
 include_directories("include")
 
-add_executable(OOGL_EXE "null.cpp")
+add_executable(OOGL_EXE "C:/Users/GAWServer/source/repos/OOGL-Cmake/samples/StencilReflection/main.cpp")
 add_subdirectory("src/GL")
 
 
