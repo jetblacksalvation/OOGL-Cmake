@@ -12,10 +12,11 @@ jobs:
     runs-on: windows-latest
     
     steps:
-      - name: configure
-        run: mkdir build
-      - name: cd and build
-        run: cd build && cmake ..
+    
+      - name: Configure CMake
+        run: cmake -S . -B build
+      - name: Build
+        run: cmake --build build
       - name: Checkout code
         uses: actions/checkout@master
       - name: Create Release
