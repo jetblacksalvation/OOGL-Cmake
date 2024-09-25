@@ -13,11 +13,15 @@ To start using this library, all you need is Windows or a Linux distro and a wor
 or pressing F7 after loading the project in Visual Studio on Windows. To find out how to get started, have a look at the [wiki](https://github.com/Overv/OOGL/wiki).
 ## Deps
 Windows - none
+
+
 Linux - 
 ``
 sudo apt-get update
 sudo apt-get install cmake pkg-config
 sudo apt-get install mesa-utils libglu1-mesa-dev freeglut3-dev mesa-common-dev
+sudo apt-get install libglew-dev libglfw3-dev libglm-dev
+
 ``
 ## Sample
 
