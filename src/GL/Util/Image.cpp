@@ -5,7 +5,7 @@
 
 #include <GL/Util/Image.hpp>
 #include "jpeglib.h"
-#include "png.h"
+#include "libpng/png.h"
 
 #include <fstream>
 #include <cstring>
