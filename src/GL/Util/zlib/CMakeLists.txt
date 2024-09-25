@@ -1,0 +1,5 @@
+FILE(GLOB ZLIB_SOURCE *.c)
+
+target_sources(OOGL_EXE PUBLIC 
+	${ZLIB_SOURCE}
+)

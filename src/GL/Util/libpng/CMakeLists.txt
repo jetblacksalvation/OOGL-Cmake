@@ -1,0 +1,5 @@
+FILE(GLOB LIBPNG_SOURCE *.c)
+
+target_sources(OOGL_EXE PUBLIC 
+	${LIBPNG_SOURCE}
+)

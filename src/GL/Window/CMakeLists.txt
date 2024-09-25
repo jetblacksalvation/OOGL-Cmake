@@ -1,6 +1,5 @@
 set(OOGL_WINDOW_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/")
-message("Window")
-message("Window")
+
 target_sources(OOGL_EXE PUBLIC 
 	${OOGL_WINDOW_SOURCE}Window.cpp  ${OOGL_WINDOW_SOURCE}Window_Win32.cpp  ${OOGL_WINDOW_SOURCE}Window_X11.cpp
 )

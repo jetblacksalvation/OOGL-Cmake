@@ -25,8 +25,8 @@
 #endif
 
 #include <GL/Util/Image.hpp>
-//#include <GL/Util/libjpeg/jpeglib.h>
-//#include <GL/Util/libpng/png.h>
+#include <jpeglib.h>
+#include "libpng/png.h"
 #include <fstream>
 #include <cstring>
 #include <cstdlib>
@@ -468,183 +468,183 @@ namespace GL
 
 	void Image::LoadJPEG( ByteReader& data )
 	{
-		//// Initialize structures
-		//jpeg_decompress_struct cinfo;
-		//jpeg_error_mgr jerr;
+		// Initialize structures
+		jpeg_decompress_struct cinfo;
+		jpeg_error_mgr jerr;
 
-		//cinfo.err = jpeg_std_error( &jerr );
-		//jpeg_create_decompress( &cinfo );
-		//jpeg_mem_src( &cinfo, data.Data(), data.Length() );
+		cinfo.err = jpeg_std_error( &jerr );
+		jpeg_create_decompress( &cinfo );
+		jpeg_mem_src( &cinfo, data.Data(), data.Length() );
 
-		//// JPEG header
-		//jpeg_read_header( &cinfo, true );
-		//if ( cinfo.output_width > USHRT_MAX ) throw FormatException();
-		//if ( cinfo.output_height > USHRT_MAX ) throw FormatException();
+		// JPEG header
+		jpeg_read_header( &cinfo, true );
+		if ( cinfo.output_width > USHRT_MAX ) throw FormatException();
+		if ( cinfo.output_height > USHRT_MAX ) throw FormatException();
 
-		//// Pixel data
-		//jpeg_start_decompress( &cinfo );
-		//
-		//int stride = cinfo.output_width * cinfo.output_components;
-		//JSAMPARRAY buffer = cinfo.mem->alloc_sarray( (j_common_ptr)&cinfo, JPOOL_IMAGE, stride, 1 );
+		// Pixel data
+		jpeg_start_decompress( &cinfo );
+		
+		int stride = cinfo.output_width * cinfo.output_components;
+		JSAMPARRAY buffer = cinfo.mem->alloc_sarray( (j_common_ptr)&cinfo, JPOOL_IMAGE, stride, 1 );
 
-		//image = new Color[ cinfo.output_width * cinfo.output_height ];
+		image = new Color[ cinfo.output_width * cinfo.output_height ];
 
-		//for ( ushort y = 0; y < cinfo.output_height; y++ )
-		//{
-		//	jpeg_read_scanlines( &cinfo, buffer, 1 );
-		//	
-		//	for ( ushort x = 0; x < cinfo.output_width; x++ )
-		//		image[ x + y * cinfo.output_width ] = Color( buffer[0][x*3+0], buffer[0][x*3+1], buffer[0][x*3+2] );
-		//}
+		for ( ushort y = 0; y < cinfo.output_height; y++ )
+		{
+			jpeg_read_scanlines( &cinfo, buffer, 1 );
+			
+			for ( ushort x = 0; x < cinfo.output_width; x++ )
+				image[ x + y * cinfo.output_width ] = Color( buffer[0][x*3+0], buffer[0][x*3+1], buffer[0][x*3+2] );
+		}
 
-		//jpeg_finish_decompress( &cinfo );
+		jpeg_finish_decompress( &cinfo );
 
-		//jpeg_destroy_decompress( &cinfo );
+		jpeg_destroy_decompress( &cinfo );
 
-		//this->width = (ushort)cinfo.output_width;
-		//this->height = (ushort)cinfo.output_height;
+		this->width = (ushort)cinfo.output_width;
+		this->height = (ushort)cinfo.output_height;
 	}
 
 	void Image::SaveJPEG( const std::string& filename )
 	{
-		//FILE* file = fopen( filename.c_str(), "wb" );
-		//if ( !file ) throw FileException();
+		FILE* file = fopen( filename.c_str(), "wb" );
+		if ( !file ) throw FileException();
 
-		//// Initialize structures
-		//jpeg_compress_struct cinfo;
-		//jpeg_error_mgr jerr;
+		// Initialize structures
+		jpeg_compress_struct cinfo;
+		jpeg_error_mgr jerr;
 
-		//cinfo.err = jpeg_std_error( &jerr );
-		//jpeg_create_compress( &cinfo );
-		//
-		//cinfo.image_width = width;
-		//cinfo.image_height = height;
-		//cinfo.input_components = 3;
-		//cinfo.in_color_space = JCS_RGB;
+		cinfo.err = jpeg_std_error( &jerr );
+		jpeg_create_compress( &cinfo );
+		
+		cinfo.image_width = width;
+		cinfo.image_height = height;
+		cinfo.input_components = 3;
+		cinfo.in_color_space = JCS_RGB;
 
-		//// Configure image
-		//jpeg_stdio_dest( &cinfo, file );
-		//jpeg_set_defaults( &cinfo );
-		//jpeg_set_quality( &cinfo, 90, true );
+		// Configure image
+		jpeg_stdio_dest( &cinfo, file );
+		jpeg_set_defaults( &cinfo );
+		jpeg_set_quality( &cinfo, 90, true );
 
-		//// Prepare pixel data
-		//std::vector<uchar> pixelData;
-		//pixelData.reserve( width * height * 3 );
+		// Prepare pixel data
+		std::vector<uchar> pixelData;
+		pixelData.reserve( width * height * 3 );
 
-		//for ( ushort y = 0; y < height; y++ )
-		//{
-		//	for ( ushort x = 0; x < width; x++ )
-		//	{
-		//		Color& col = image[ x + y * width ];
-		//		pixelData.push_back( col.R );
-		//		pixelData.push_back( col.G );
-		//		pixelData.push_back( col.B );
-		//	}
-		//}
+		for ( ushort y = 0; y < height; y++ )
+		{
+			for ( ushort x = 0; x < width; x++ )
+			{
+				Color& col = image[ x + y * width ];
+				pixelData.push_back( col.R );
+				pixelData.push_back( col.G );
+				pixelData.push_back( col.B );
+			}
+		}
 
-		//// Compress
-		//jpeg_start_compress( &cinfo, true );
+		// Compress
+		jpeg_start_compress( &cinfo, true );
 
-		//for ( ushort y = 0; y < height; y++ )
-		//{
-		//	JSAMPROW row = &pixelData[ y * width * 3 ];
-		//	jpeg_write_scanlines( &cinfo, &row, 1 );
-		//}
+		for ( ushort y = 0; y < height; y++ )
+		{
+			JSAMPROW row = &pixelData[ y * width * 3 ];
+			jpeg_write_scanlines( &cinfo, &row, 1 );
+		}
 
-		//jpeg_finish_compress( &cinfo );
+		jpeg_finish_compress( &cinfo );
 
-		//jpeg_destroy_compress( &cinfo );
+		jpeg_destroy_compress( &cinfo );
 
-		//fclose( file );
+		fclose( file );
 	}
 
-	//void readPNG( png_structp png_ptr, png_bytep dest, png_size_t length )
-	//{
-	//	ByteReader& data = *(ByteReader*)png_ptr->io_ptr;
-	//	data.Read( dest, length );
-	//}
+	void readPNG( png_structp png_ptr, png_bytep dest, png_size_t length )
+	{
+		ByteReader& data = *(ByteReader*)png_ptr->io_ptr;
+		data.Read( dest, length );
+	}
 
 	void Image::LoadPNG( ByteReader& data )
 	{		
-		//// Initialize structures
-		//png_structp png = png_create_read_struct( PNG_LIBPNG_VER_STRING, NULL, NULL, NULL );
-		//png_infop info = png_create_info_struct( png );
+		// Initialize structures
+		png_structp png = png_create_read_struct( PNG_LIBPNG_VER_STRING, NULL, NULL, NULL );
+		png_infop info = png_create_info_struct( png );
 
-		//setjmp( png_jmpbuf( png ) );
+		setjmp( png_jmpbuf( png ) );
 
-		//png_set_read_fn( png, (void*)&data, &readPNG );
+		png_set_read_fn( png, (void*)&data, &readPNG );
 
-		//// Header
-		//png_read_info( png, info );
-		//if ( info->width > USHRT_MAX ) throw FormatException();
-		//if ( info->height > USHRT_MAX ) throw FormatException();
+		// Header
+		png_read_info( png, info );
+		if ( info->width > USHRT_MAX ) throw FormatException();
+		if ( info->height > USHRT_MAX ) throw FormatException();
 
-		//// Pixel data
-		//image = new Color[ info->width * info->height ];
+		// Pixel data
+		image = new Color[ info->width * info->height ];
 
-		//png_uint_32 rowLength = png_get_rowbytes( png, info );
-		//std::vector<uchar> row( rowLength );
+		png_uint_32 rowLength = png_get_rowbytes( png, info );
+		std::vector<uchar> row( rowLength );
 
-		//for ( ushort y = 0; y < info->height; y++ )
-		//{
-		//	png_read_row( png, &row[0], NULL );
+		for ( ushort y = 0; y < info->height; y++ )
+		{
+			png_read_row( png, &row[0], NULL );
 
-		//	if ( info->color_type == PNG_COLOR_TYPE_RGB )
-		//		for ( ushort x = 0; x < info->width; x++ )
-		//			image[ x + y * info->width ] = Color( row[x*3+0], row[x*3+1], row[x*3+2] );
-		//	else if ( info->color_type == PNG_COLOR_TYPE_RGBA )
-		//		for ( ushort x = 0; x < info->width; x++ )
-		//			image[ x + y * info->width ] = Color( row[x*4+0], row[x*4+1], row[x*4+2], row[x*4+3] );
-		//	else
-		//		throw FormatException();
-		//}
+			if ( info->color_type == PNG_COLOR_TYPE_RGB )
+				for ( ushort x = 0; x < info->width; x++ )
+					image[ x + y * info->width ] = Color( row[x*3+0], row[x*3+1], row[x*3+2] );
+			else if ( info->color_type == PNG_COLOR_TYPE_RGBA )
+				for ( ushort x = 0; x < info->width; x++ )
+					image[ x + y * info->width ] = Color( row[x*4+0], row[x*4+1], row[x*4+2], row[x*4+3] );
+			else
+				throw FormatException();
+		}
 
-		//width = (ushort)info->width;
-		//height = (ushort)info->height;
+		width = (ushort)info->width;
+		height = (ushort)info->height;
 
-		//png_destroy_read_struct( &png, &info, NULL );
+		png_destroy_read_struct( &png, &info, NULL );
 	}
 
 	void Image::SavePNG( const std::string& filename )
 	{
-		//FILE* file = fopen( filename.c_str(), "wb" );
-		//if ( !file ) throw FileException();
+		FILE* file = fopen( filename.c_str(), "wb" );
+		if ( !file ) throw FileException();
 
-		//// Initialize structures
-		//png_structp png = png_create_write_struct( PNG_LIBPNG_VER_STRING, NULL, NULL, NULL );
-		//png_infop info = png_create_info_struct( png );
+		// Initialize structures
+		png_structp png = png_create_write_struct( PNG_LIBPNG_VER_STRING, NULL, NULL, NULL );
+		png_infop info = png_create_info_struct( png );
 
-		//setjmp( png_jmpbuf( png ) );
+		setjmp( png_jmpbuf( png ) );
 
-		//// Configure image
-		//png_init_io( png, file );
-		//png_set_IHDR( png, info, width, height, 8, PNG_COLOR_TYPE_RGB_ALPHA, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE );
-		//png_write_info( png, info );
+		// Configure image
+		png_init_io( png, file );
+		png_set_IHDR( png, info, width, height, 8, PNG_COLOR_TYPE_RGB_ALPHA, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE );
+		png_write_info( png, info );
 
-		//// Prepare pixel data
-		//std::vector<uchar> pixelData;
-		//pixelData.reserve( width * height * 4 );
+		// Prepare pixel data
+		std::vector<uchar> pixelData;
+		pixelData.reserve( width * height * 4 );
 
-		//for ( ushort y = 0; y < height; y++ )
-		//{
-		//	for ( ushort x = 0; x < width; x++ )
-		//	{
-		//		Color& col = image[ x + y * width ];
-		//		pixelData.push_back( col.R );
-		//		pixelData.push_back( col.G );
-		//		pixelData.push_back( col.B );
-		//		pixelData.push_back( col.A );
-		//	}
-		//}
+		for ( ushort y = 0; y < height; y++ )
+		{
+			for ( ushort x = 0; x < width; x++ )
+			{
+				Color& col = image[ x + y * width ];
+				pixelData.push_back( col.R );
+				pixelData.push_back( col.G );
+				pixelData.push_back( col.B );
+				pixelData.push_back( col.A );
+			}
+		}
 
-		//// Write rows
-		//for ( ushort y = 0; y < height; y++ )
-		//	png_write_row( png, &pixelData[ y * width * 4 ] );
+		// Write rows
+		for ( ushort y = 0; y < height; y++ )
+			png_write_row( png, &pixelData[ y * width * 4 ] );
 
-		//png_write_end( png, info );
+		png_write_end( png, info );
 
-		//png_destroy_write_struct( &png, &info );
+		png_destroy_write_struct( &png, &info );
 
-		//fclose( file );
+		fclose( file );
 	}
 }

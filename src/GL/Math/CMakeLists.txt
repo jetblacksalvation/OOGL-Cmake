@@ -1,0 +1,5 @@
+FILE(GLOB OOGL_MATH_SOURCE *.c)
+
+target_sources(OOGL_EXE PUBLIC 
+	${OOGL_MATH_SOURCE}
+)
