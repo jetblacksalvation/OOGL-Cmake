@@ -67,6 +67,7 @@ namespace GL
 			Triangles = GL_TRIANGLES,
 			Lines = GL_LINES,
 			Points = GL_POINTS,
+			LineStrip = GL_LINE_STRIP
 		};
 	}
 
