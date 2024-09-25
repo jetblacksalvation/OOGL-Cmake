@@ -11,4 +11,5 @@ add_subdirectory("libjpeg")
 add_subdirectory("libpng")
 add_subdirectory("zlib")
 
-target_include_directories(OOGL_EXE PUBLIC include "libpnng" "libjpeg" "zlib") 
+target_include_directories(OOGL_EXE PUBLIC "libpnng" "libjpeg" "zlib") 
+target_include_directories(OOGL_LIB PUBLIC "libpnng" "libjpeg" "zlib") 

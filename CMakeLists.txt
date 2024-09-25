@@ -4,9 +4,11 @@ include(FindOpenGL)
 cmake_minimum_required(VERSION 3.18)
 project(OOGL LANGUAGES CXX C)
 add_library(OOGL_LIB "null.cpp")
-add_executable(OOGL_EXE "null.cpp")
-
 include_directories("include")
+
+add_executable(OOGL_EXE "null.cpp")
+include_directories("include")
+
 
 
 

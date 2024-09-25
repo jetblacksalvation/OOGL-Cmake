@@ -5,5 +5,5 @@ target_sources(OOGL_EXE PUBLIC
 	${LIBPNG_SOURCE}
 )
 target_sources(OOGL_LIB PUBLIC 
-	${LIBPNG_SOURCE}
+	${LIBPNG_SOURCE} ${LIBPNG_HEADERS}
 )

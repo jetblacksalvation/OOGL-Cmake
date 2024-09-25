@@ -5,5 +5,5 @@ target_sources(OOGL_EXE PUBLIC
 	${LIJPEG_SOURCE}
 )
 target_sources(OOGL_LIB PUBLIC 
-	${LIJPEG_SOURCE}
+	${LIJPEG_SOURCE} ${LIJPEG_HEADERS}
 )
