@@ -12,7 +12,8 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    
+      - name: Clone The Code
+        run: git clone https://github.com/jetblacksalvation/OOGL-Cmake.git
       - name: Configure CMake
         run: cmake -S . -B build
       - name: Build
