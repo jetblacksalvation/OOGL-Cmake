@@ -4,7 +4,7 @@
 #endif
 
 #include <GL/Util/Image.hpp>
-#include <jpeglib.h>
+#include "jpeglib.h"
 #include "libpng/png.h"
 
 #include <fstream>

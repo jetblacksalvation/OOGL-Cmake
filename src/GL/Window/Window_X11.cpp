@@ -24,6 +24,7 @@
 
 #include <GL/Window/Window.hpp>
 
+
 #ifdef OOGL_PLATFORM_LINUX
 
 #include <X11/Xutil.h>
