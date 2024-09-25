@@ -1,0 +1,21 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: install
+      run: sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev
+    - name: configure
+      run: mkdir build
+    - name: cd and build
+      run: cd build &&cmake ..
