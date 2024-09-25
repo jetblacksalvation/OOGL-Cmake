@@ -12,14 +12,15 @@ jobs:
     runs-on: windows-latest
     
     steps:
+      - name: Checkout code
+        uses: actions/checkout@master
       - name: Clone The Code
         run: git clone https://github.com/jetblacksalvation/OOGL-Cmake.git
       - name: Configure CMake
         run: cmake -S . -B build
       - name: Build
         run: cmake --build build
-      - name: Checkout code
-        uses: actions/checkout@master
+      
       - name: Create Release
         id: create_release
         uses: actions/create-release@latest
