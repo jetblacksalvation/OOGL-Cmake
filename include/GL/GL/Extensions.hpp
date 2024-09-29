@@ -80,10 +80,11 @@
 /*
 	Shaders
 */
-
+#define GL_TESS_EVALUATION_SHADER         0x8E87
+#define GL_TESS_CONTROL_SHADER            0x8E88
 #define GL_FRAGMENT_SHADER 0x8B30
 #define GL_VERTEX_SHADER 0x8B31
-#define GL_GEOMETRY_SHADER 0x8DD9
+//#define GL_GEOMETRY_SHADER 0x8DD9 //<-- depricated
 #define GL_COMPILE_STATUS 0x8B81
 #define GL_INFO_LOG_LENGTH 0x8B84
 

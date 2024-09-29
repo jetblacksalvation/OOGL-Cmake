@@ -9,6 +9,15 @@ include_directories("include")
 add_executable(OOGL_EXE "null.cpp")
 include_directories("include")
 
+set_target_properties(OOGL_LIB PROPERTIES
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
+    PUBLIC_HEADER include/GL/OOGL.hpp
+)
+set(${PROJECT_NAME}_INCLUDE_DIRS ${PREFIX}/include/)
+
+set(${PROJECT_NAME}_LIBRARIES "${CMAKE_BINARY_DIR}/OOGL_ELIB")
+
 
 
 
@@ -33,3 +42,8 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_libraries(OOGL_LIB PRIVATE X11::X11)
 
 endif()
+
+target_include_directories(OOGL_LIB INTERFACE
+  # Ok, relocatable:
+  $<INSTALL_INTERFACE:include/TgtName>
+)

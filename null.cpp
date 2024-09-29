@@ -54,7 +54,11 @@ int main()
 {
 	GL::Window window(800, 800, "OpenGL Window", GL::WindowStyle::Close);
 	GL::Context& gl = window.GetContext();
-
+	int major = 0;
+	int minor = 0;
+	glGetIntegerv(GL_MAJOR_VERSION, &major);
+	glGetIntegerv(GL_MINOR_VERSION, &minor);
+	std::cout << major << " IS MAJOR \n";
 	GL::Shader vert(GL::ShaderType::Vertex, "#version 150\nin vec2 position; void main() { gl_Position = vec4(position, 0.0, 1.0); }");
 	GL::Shader frag(GL::ShaderType::Fragment, "#version 150\nout vec4 outColor; void main() { outColor = vec4(1.0, 0.0, 0.0, 1.0); }");
 	GL::Program program(vert, frag);
