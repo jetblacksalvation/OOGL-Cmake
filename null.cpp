@@ -60,6 +60,47 @@ int main()
 	glGetIntegerv(GL_MINOR_VERSION, &minor);
 	std::cout << major << " IS MAJOR \n";
 	GL::Shader vert(GL::ShaderType::Vertex, "#version 150\nin vec2 position; void main() { gl_Position = vec4(position, 0.0, 1.0); }");
+	//<-- add tess code here 
+	GL::Shader tcontrol(
+		GL::ShaderType::TessControl, 
+		R"(
+#version 400 core
+layout (vertices = 4) out;
+
+uniform int tessLevel;
+
+void main() {
+	gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
+
+	gl_TessLevelOuter[0] = tessLevel;
+	gl_TessLevelOuter[1] = tessLevel;
+	gl_TessLevelOuter[2] = tessLevel;
+	gl_TessLevelOuter[3] = tessLevel;
+
+	gl_TessLevelInner[0] = tessLevel;
+	gl_TessLevelInner[1] = tessLevel;
+}
+	)"
+	);
+	GL::Shader tshader(
+		GL::ShaderType::TessEval,
+		R"(
+	    #version 400 core
+    layout (quads, equal_spacing) in;
+
+    void main() {
+        vec4 p0 = gl_in[0].gl_Position;
+        vec4 p1 = gl_in[1].gl_Position;
+        vec4 p2 = gl_in[2].gl_Position;
+        vec4 p3 = gl_in[3].gl_Position;
+
+        float u = gl_TessCoord.x;
+        float v = gl_TessCoord.y;
+
+        gl_Position = (1 - u) * (1 - v) * p0 + u * (1 - v) * p1 + u * v * p2 + (1 - u) * v * p3;
+    }
+)"
+	);
 	GL::Shader frag(GL::ShaderType::Fragment, "#version 150\nout vec4 outColor; void main() { outColor = vec4(1.0, 0.0, 0.0, 1.0); }");
 	GL::Program program(vert, frag);
 	Square square = { -.65,0,0.25f };
