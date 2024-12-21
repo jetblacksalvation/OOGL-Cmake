@@ -2,6 +2,6 @@ FILE(GLOB OOGL_GL_SOURCE *.cpp)
 
 target_sources(OOGL_EXE PUBLIC 
 	${OOGL_GL_SOURCE}
-
 )
+
 target_sources(OOGL_LIB PUBLIC ${OOGL_GL_SOURCE})

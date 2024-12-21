@@ -108,7 +108,8 @@ namespace GL
 			std::string infoLog( res, 0 );
 			glGetProgramInfoLog( obj, res, &res, &infoLog[0] );
 			return infoLog;
-		} else {
+		} else 
+		{
 			return "";
 		}
 	}
