@@ -22,8 +22,36 @@
 #include <GL/GL/Shader.hpp>
 #include <vector>
 #include <iostream>
+#include <filesystem>
+#include <string>
+#include <fstream>
 namespace GL
 {
+	Shader::Shader(ShaderType::shader_type_t type, std::filesystem::directory_entry entry)
+	{
+		obj = gc.Create(glCreateShader(type), glDeleteShader);
+		std::string str;
+		std::ifstream code(entry.path());
+
+		if (code.is_open()) {
+			std::string line;
+			while (std::getline(code, line)) {
+				str += line +'\n';
+			}
+			code.close();
+		}
+		else {
+			std::cerr << "Error opening file " << std::endl;
+		}
+		std::cout << "COMPILNING : " << str<< '\n';
+		Source(str);
+		Compile();
+	}
+	Shader::Shader()
+	{
+		//add some code to indicate it has not been initialized, should raise an exception when used if obj is null.
+
+	}
 	Shader::Shader( const Shader& other )
 	{
 		gc.Copy( other.obj, obj );
@@ -56,6 +84,11 @@ namespace GL
 		gc.Copy( other.obj, obj, true );
 		return *this;
 	}
+	const Shader& Shader::operator=(Shader& other) 
+	{
+		gc.Copy(other.obj, obj, true);
+		return *this;
+	};
 
 	void Shader::Source( const std::string& code )
 	{

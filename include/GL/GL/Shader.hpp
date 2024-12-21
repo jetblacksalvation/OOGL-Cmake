@@ -29,7 +29,7 @@
 #include <GL/GL/Extensions.hpp>
 #include <exception>
 #include <string>
-
+#include <filesystem>
 #define GLSL( x ) "#version 150\n" #x
 
 namespace GL
@@ -68,19 +68,22 @@ namespace GL
 	/*
 		Shader
 	*/
+	
 	class Shader
 	{
 	public:
+		Shader();
 		Shader( const Shader& other );
 		Shader( ShaderType::shader_type_t type );
-		Shader( ShaderType::shader_type_t type, const std::string& code );
+		Shader( ShaderType::shader_type_t type, const std::string& code);
+		Shader( ShaderType::shader_type_t type, std::filesystem::directory_entry entry);
 
 		~Shader();
 
 		operator GLuint() const;
 		const Shader& operator=( const Shader& other );
-
-		void Source( const std::string& code );
+		const Shader& operator=( Shader& other );
+		void Source( const std::string& code) ;
 		void Compile();
 
 		std::string GetInfoLog();
