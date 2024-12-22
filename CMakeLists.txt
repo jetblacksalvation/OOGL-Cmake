@@ -5,14 +5,12 @@ project(OOGL LANGUAGES CXX C)
 set(CMAKE_CXX_STANDARD 23)
 add_definitions(-DSCRIPTS="${CMAKE_SOURCE_DIR}/glsl_scripts")
 
-add_executable(OOGL_EXE "null.cpp")  # Make sure to replace "main.cpp" with the actual source file for your executable
+add_executable(OOGL_EXE "null.cpp" )  # Make sure to replace "main.cpp" with the actual source file for your executable
 
 # Add a simple source file and create the library
 add_library(OOGL_LIB STATIC "null.cpp")
 target_include_directories(OOGL_LIB PUBLIC "include")
-target_compile_definitions(OOGL_LIB PUBLIC "src/GL")
 target_include_directories(OOGL_LIB PUBLIC "src/GL")
-target_sources(OOGL_LIB PUBLIC "src/GL")
 #DEPEND
 include(FetchContent)
 include(FindOpenGL)
