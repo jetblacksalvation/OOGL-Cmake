@@ -1,6 +1,7 @@
 on:
   push:
-    tags: ["*"]  # This triggers on any tag push
+    branches: 
+      - master  # You can change this to whatever branch triggers the release
 
 name: Build and Release
 
@@ -9,31 +10,45 @@ jobs:
     runs-on: windows-latest
     
     steps:
-      # Checkout the repository
+      # Checkout the code
       - name: Checkout code
         uses: actions/checkout@v2
-        
-      # Clone the external library if needed (if FetchContent is not used)
-      - name: Clone The Code
-        run: git clone https://github.com/jetblacksalvation/OOGL-Cmake.git
+
+      # Get the latest tag and generate a new one
+      - name: Get latest tag
+        id: get_latest_tag
+        run: |
+          # Get the latest tag
+          latest_tag=$(git describe --tags --abbrev=0 || echo "v0.0.0")
+          # Generate new tag by incrementing the version or using timestamp
+          echo "Latest tag: $latest_tag"
+          new_tag="v$(date +'%Y%m%d%H%M%S')"  # Create a tag based on timestamp
+          echo "New tag: $new_tag"
+          echo "::set-output name=new_tag::$new_tag"
+
+      # Create a new tag
+      - name: Create new tag
+        run: |
+          git tag ${{ steps.get_latest_tag.outputs.new_tag }}
+          git push origin ${{ steps.get_latest_tag.outputs.new_tag }}
 
       # Configure the project with CMake
       - name: Configure CMake
         run: cmake -S . -B build
-        
+
       # Build the project
       - name: Build project
         run: cmake --build build --config Release
 
-      # Create a GitHub Release
+      # Create a GitHub Release with the dynamically generated tag
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ steps.get_latest_tag.outputs.new_tag }}
+          release_name: Release ${{ steps.get_latest_tag.outputs.new_tag }}
           body: |
             Changes in this release:
             - First Change
@@ -41,7 +56,7 @@ jobs:
           draft: false
           prerelease: false
 
-      # Upload the compiled files to the release
+      # Upload Release Assets
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
         with:
