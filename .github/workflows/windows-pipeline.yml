@@ -1,7 +1,6 @@
 on:
   push:
-    branches: 
-      - master  # You can change this to whatever branch triggers the release
+    tags: ["*"]  # This triggers on any tag push
 
 name: Build and Release
 
@@ -10,7 +9,7 @@ jobs:
     runs-on: windows-latest
     
     steps:
-      # Checkout the code
+      # Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -18,11 +17,12 @@ jobs:
       - name: Get latest tag
         id: get_latest_tag
         run: |
-          # Get the latest tag
-          latest_tag=$(git describe --tags --abbrev=0 || echo "v0.0.0")
-          # Generate new tag by incrementing the version or using timestamp
+          # Use PowerShell to get the latest tag, or use a default if no tags exist
+          $latest_tag = git describe --tags --abbrev=0
+          if (-not $latest_tag) { $latest_tag = "v0.0.0" }
+          # Create a new tag based on timestamp
+          $new_tag = "v$(Get-Date -Format 'yyyyMMddHHmmss')"
           echo "Latest tag: $latest_tag"
-          new_tag="v$(date +'%Y%m%d%H%M%S')"  # Create a tag based on timestamp
           echo "New tag: $new_tag"
           echo "::set-output name=new_tag::$new_tag"
 
