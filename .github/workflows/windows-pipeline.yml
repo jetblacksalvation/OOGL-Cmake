@@ -1,6 +1,6 @@
 on:
   push:
-    tags: ["*"]  # This triggers on any tag push
+    tags: ["*"]  # Trigger on any tag push
 
 name: Build and Release
 
@@ -13,20 +13,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Get the latest tag and generate a new one
+      # Get the latest tag and create a new one based on the timestamp
       - name: Get latest tag
         id: get_latest_tag
         run: |
-          # Use PowerShell to get the latest tag, or use a default if no tags exist
+          # Use PowerShell to get the latest tag or default to v0.0.0 if no tags are found
           $latest_tag = git describe --tags --abbrev=0
-          if (-not $latest_tag) { $latest_tag = "v0.0.0" }
-          # Create a new tag based on timestamp
+          if (-not $latest_tag) {
+            $latest_tag = "v0.0.0"
+          }
+          
+          # Generate a new tag based on the current date and time
           $new_tag = "v$(Get-Date -Format 'yyyyMMddHHmmss')"
-          echo "Latest tag: $latest_tag"
-          echo "New tag: $new_tag"
+
+          # Output the latest and new tag for debugging purposes
+          Write-Host "Latest tag: $latest_tag"
+          Write-Host "New tag: $new_tag"
+
+          # Set the new tag as output for use in the next steps
           echo "::set-output name=new_tag::$new_tag"
 
-      # Create a new tag
+      # Create a new tag based on the timestamp
       - name: Create new tag
         run: |
           git tag ${{ steps.get_latest_tag.outputs.new_tag }}
