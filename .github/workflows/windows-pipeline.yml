@@ -1,42 +1,53 @@
 on:
   push:
-    branches: ["master"]
-  pull_request:
-    branches: ["master"]
+    tags: ["*"]  # This triggers on any tag push
 
-name: Windows Pipeline
+name: Build and Release
 
 jobs:
   build:
-    permissions: write-all
-
-    name: Create Release
     runs-on: windows-latest
     
     steps:
+      # Checkout the repository
       - name: Checkout code
-        uses: actions/checkout@master
+        uses: actions/checkout@v2
         
+      # Clone the external library if needed (if FetchContent is not used)
       - name: Clone The Code
         run: git clone https://github.com/jetblacksalvation/OOGL-Cmake.git
-        
+
+      # Configure the project with CMake
       - name: Configure CMake
         run: cmake -S . -B build
         
-      - name: Build
-        run: cmake --build build
-      
+      # Build the project
+      - name: Build project
+        run: cmake --build build --config Release
+
+      # Create a GitHub Release
       - name: Create Release
         id: create_release
-        uses: actions/create-release@latest
+        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref_name }}  # Use ref_name to get the correct tag name
-          release_name: Release ${{ github.ref_name }}
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
           body: |
-            Changes in this Release
+            Changes in this release:
             - First Change
             - Second Change
           draft: false
           prerelease: false
+
+      # Upload the compiled files to the release
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/OOGL_LIB.dll
+            build/OOGL_LIB.ilk
+            build/OOGL_LIB.pdb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
