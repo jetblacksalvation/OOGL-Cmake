@@ -68,7 +68,7 @@ namespace GL
 	/*
 		Shader
 	*/
-	
+
 	class Shader
 	{
 	public:
@@ -76,7 +76,7 @@ namespace GL
 		Shader( const Shader& other );
 		Shader( ShaderType::shader_type_t type );
 		Shader( ShaderType::shader_type_t type, const std::string& code);
-		Shader( ShaderType::shader_type_t type, std::filesystem::directory_entry entry);
+		Shader( ShaderType::shader_type_t type, std::filesystem::path entry);
 
 		~Shader();
 
@@ -92,6 +92,7 @@ namespace GL
 		static GC gc;
 		GLuint obj;
 	};
+	Shader CreateShaderFromFilepath(ShaderType::shader_type_t type, std::string path);
 }
 
 #endif

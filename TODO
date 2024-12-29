@@ -1,3 +1,7 @@
+- add an option for default uniforms to be added and initialized.
+maybe something like being able to bind a function to 
+
+//
 - Support for materials in the Mesh class
 - Ability to create textures directly from memory buffers
 - Support for 1D and 3D textures

@@ -47,29 +47,18 @@ int main()
     GL::Context& gl = window.GetContext();
     startTime = std::chrono::high_resolution_clock::now();
 
-    // Load shaders
-    std::ifstream vertex_file;
-    std::ifstream frag_file;
 
-    using recursive_directory_iterator = std::filesystem::directory_iterator;
+    using std::filesystem::path ; 
+
     GL::Shader vert;
     GL::Shader frag;
-    for (const auto& dirEntry : recursive_directory_iterator(SCRIPTS))
-    {
-        if (dirEntry.is_regular_file()) {
-            if (dirEntry.path().filename() == "demo_frag.glsl")
-            {
-                vert = GL::Shader(GL::ShaderType::Vertex, dirEntry);
-            }
-            else if (dirEntry.path().filename() == "demo_vertex.glsl")
-            {
-                frag = GL::Shader(GL::ShaderType::Fragment, dirEntry);
-            }
-            std::cout << dirEntry << std::endl;
-        }
-    }
-    float time = getTimeSinceStart();
+    std::filesystem::path script_path(SCRIPTS);
 
+    vert = GL::Shader(GL::ShaderType::Vertex, script_path / "demo_vertex.glsl") ;
+    frag = GL::Shader(GL::ShaderType::Fragment, script_path / "demo_frag.glsl");
+
+    float time = getTimeSinceStart();
+    
     // Create the OpenGL program with the shaders
     GL::Program program(vert, frag);
 
@@ -91,6 +80,7 @@ int main()
             }
         }
         GL::Uniform utime_id = program.GetUniform("u_time");
+        
         glUniform1f(utime_id, getTimeSinceStart());
         // Draw the full-screen square
         drawSelf(program, gl);
