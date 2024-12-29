@@ -27,11 +27,13 @@
 #include <fstream>
 namespace GL
 {
-	Shader::Shader(ShaderType::shader_type_t type, std::filesystem::directory_entry entry)
+
+
+	Shader::Shader(ShaderType::shader_type_t type, std::filesystem::path entry)
 	{
 		obj = gc.Create(glCreateShader(type), glDeleteShader);
 		std::string str;
-		std::ifstream code(entry.path());
+		std::ifstream code(entry);
 
 		if (code.is_open()) {
 			std::string line;
@@ -123,4 +125,11 @@ namespace GL
 	}
 
 	GC Shader::gc;
+	//extra functions
+	Shader CreateShaderFromFilepath(ShaderType::shader_type_t type, std::string path)
+	{
+		std::cout << std::filesystem::current_path() / path << " IS CREATE PATH\n";
+		return Shader(type, std::filesystem::directory_entry(std::filesystem::current_path() / path));
+	};
+
 }

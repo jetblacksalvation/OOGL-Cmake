@@ -43,7 +43,6 @@ public:
 		vertices[2] = x + w;    vertices[3] = y;        // Top-right
 		vertices[4] = x + w;    vertices[5] = y - w;    // Bottom-right
 		vertices[6] = x;        vertices[7] = y - w;    // Bottom-left
-		vertices[8] = x;		vertices[9] = y;
 	}
 	void drawSelf(GL::Program program, GL::Context& gl)
 	{
@@ -51,12 +50,12 @@ public:
 		GL::VertexArray vao;
 
 		vao.BindAttribute(program.GetAttribute("position"), vbo, GL::Type::Float, 2, 0, 0);
-		gl.DrawArrays(vao, GL::Primitive::TriangleFan, 0, 5);
+		gl.DrawArrays(vao, GL::Primitive::TriangleFan, 0, 4);
 	}
-	void printSelf() 
+	void printSelf()
 	{
 		std::cout << "{";
-		for (int x = 0; x < vertices.size(); x++) 
+		for (int x = 0; x < vertices.size(); x++)
 		{
 			std::cout << vertices[x];
 			if (x != vertices.size() - 1)
@@ -69,19 +68,7 @@ public:
 	}
 
 };
-void print_file(std::ifstream& file)
-{
-	if (file.is_open()) {
-		std::string line;
-		while (std::getline(file, line)) {
-			std::cout << line << std::endl;
-		}
-		file.close();
-	}
-	else {
-		std::cerr << "Error opening file " << std::endl;
-	}
-}
+
 int main()
 {
 	GL::Window window(800, 800, "OpenGL Window", GL::WindowStyle::Close);
@@ -90,38 +77,24 @@ int main()
 	std::ifstream frag_file;
 
 	using recursive_directory_iterator = std::filesystem::directory_iterator;
+	using std::filesystem::path;
+
 	GL::Shader vert;
 	GL::Shader frag;
-	for (const auto& dirEntry : recursive_directory_iterator(SCRIPTS))
-	{
-		if (dirEntry.is_regular_file()) {
+	std::filesystem::path script_path(SCRIPTS);
+	vert = GL::Shader(GL::ShaderType::Vertex, script_path / "demo_vertex.glsl");
 
-			if (dirEntry.path().filename() == "demo_frag.glsl")
-			{
-				vert = GL::Shader(GL::ShaderType::Vertex, dirEntry);
-
-			}
-			else if (dirEntry.path().filename() == "demo_vertex.glsl")
-			{
-				frag = GL::Shader(GL::ShaderType::Fragment, dirEntry);
+	frag = GL::Shader(GL::ShaderType::Fragment, script_path / "demo_frag.glsl");
 
 
-
-			}
-			std::cout << dirEntry << std::endl;
-		}
-	}
-
-
-
+ 
 
 
 	GL::Program program(vert, frag);
-	Square square = { -1,1,2 };
-	square.setUpVertices();
-	//Square squareEnemy = { .65,0,0.25f };
-	//Square squareBall = { -1,-1,0.05 };
-	//float vx = .01, vy = .01;
+	Square square = { -.65,0,0.25f };
+	Square squareEnemy = { .65,0,0.25f };
+	Square squareBall = { -1,-1,0.05 };
+	float vx = .01, vy = .01;
 
 	GL::Event ev;
 	while (window.IsOpen())
@@ -141,21 +114,20 @@ int main()
 
 		gl.Clear();
 		square.drawSelf(program, gl);
-		square.printSelf();
 
-		/*squareEnemy.drawSelf(program, gl);
-		squareBall.drawSelf(program, gl);*/
-		//if (squareBall.x < -1.0f || squareBall.x > 1.0f)
-		//	vx *= -1;
-		//if (squareBall.y < -1.0f || squareBall.y > 1.0f)
-		//	vy *= -1;
-		//if (squareBall.isOverlap(squareEnemy) || squareBall.isOverlap(square))
-		//{
-		//	vx *= -1;
-		//	vy *= -1;
+		squareEnemy.drawSelf(program, gl);
+		squareBall.drawSelf(program, gl);
+		if (squareBall.x < -1.0f || squareBall.x > 1.0f)
+			vx *= -1;
+		if (squareBall.y < -1.0f || squareBall.y > 1.0f)
+			vy *= -1;
+		if (squareBall.isOverlap(squareEnemy) || squareBall.isOverlap(square))
+		{
+			vx *= -1;
+			vy *= -1;
 
-		//}
-		//squareBall.SetPos(squareBall.x + vx, squareBall.y + vy);
+		}
+		squareBall.SetPos(squareBall.x + vx, squareBall.y + vy);
 		window.Present();
 	}
 

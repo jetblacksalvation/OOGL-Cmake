@@ -10,7 +10,6 @@ To start using this library, all you need is Windows or a Linux distro and a wor
 	cd OOGL
 	make
 
-or pressing F7 after loading the project in Visual Studio on Windows. To find out how to get started, have a look at the [wiki](https://github.com/Overv/OOGL/wiki).
 ## Deps
 Windows - none
 
