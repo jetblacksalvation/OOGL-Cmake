@@ -1,5 +1,21 @@
+cmake_policy(SET CMP0072 NEW)
+include(FetchContent)
+include(FindOpenGL)
+set(CMAKE_CXX_STANDARD 17) # Set to C++17
+
+
+
 cmake_minimum_required(VERSION 3.18)
 project(OOGL LANGUAGES CXX C)
+add_library(OOGL_LIB "null.cpp")
+include_directories("include")
+
+add_executable(OOGL_EXE "null.cpp")
+include_directories("include")
+
+add_definitions(-DSCRIPTS="${CMAKE_SOURCE_DIR}/glsl_scripts")
+
+
 
 # Set C++17 standard
 set(CMAKE_CXX_STANDARD 23)
@@ -34,10 +50,6 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_libraries(OOGL_LIB PRIVATE X11::X11)
 
 endif()
-
-
-
-
 
 # Set the output directory for the library
 set_target_properties(OOGL_LIB PROPERTIES 

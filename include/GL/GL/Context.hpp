@@ -70,7 +70,9 @@ namespace GL
 			LineStrip = GL_LINE_STRIP,
 			PolyGon = GL_POLYGON,
 			QuadStrip = GL_QUAD_STRIP,
-			TriangleFan = GL_TRIANGLE_FAN
+			TriangleFan = GL_TRIANGLE_FAN,
+			Patches = GL_PATCHES
+
 		};
 	}
 
