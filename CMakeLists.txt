@@ -1,5 +1,15 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.8)
 project(OOGL LANGUAGES CXX C)
+
+function(get_all_targets _result _dir)
+    get_property(_subdirs DIRECTORY "${_dir}" PROPERTY SUBDIRECTORIES)
+    foreach(_subdir IN LISTS _subdirs)
+        get_all_targets(${_result} "${_subdir}")
+    endforeach()
+
+    get_directory_property(_sub_targets DIRECTORY "${_dir}" BUILDSYSTEM_TARGETS)
+    set(${_result} ${${_result}} ${_sub_targets} PARENT_SCOPE)
+endfunction()
 
 # Set C++17 standard
 set(CMAKE_CXX_STANDARD 23)
@@ -36,21 +46,8 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 endif()
 
 
-
-
-
-# Set the output directory for the library
-set_target_properties(OOGL_LIB PROPERTIES 
-    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/OOGL_ELIB"
-)
 find_package(OpenGL REQUIRED)
 target_link_libraries(OOGL_LIB OpenGL::GL)
-
-# Set the output directory for the library
-set_target_properties(OOGL_LIB PROPERTIES 
-    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/OOGL_ELIB"
-)
-message(STATUS "Library output directory: ${CMAKE_BINARY_DIR}/OOGL_ELIB")
 
 #OOOGL EXE SECTION
 
@@ -63,8 +60,5 @@ target_link_libraries(OOGL_EXE OOGL_LIB)
 # Optionally, link OpenGL to the executable if needed
 target_link_libraries(OOGL_EXE OpenGL::GL)
 
-# Set the output directory for the executable
-set_target_properties(OOGL_EXE PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/OOGL_EXE"
-)
+
 
