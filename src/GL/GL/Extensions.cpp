@@ -118,7 +118,6 @@ GLTRANSFORMFEEDBACKVARYINGS glTransformFeedbackVaryings;
 GLBINDBUFFERBASE glBindBufferBase;
 GLBEGINTRANSFORMFEEDBACK glBeginTransformFeedback;
 GLENDTRANSFORMFEEDBACK glEndTransformFeedback;
-
 namespace GL
 {
 	bool extensionsLoaded = false;
@@ -162,7 +161,7 @@ namespace GL
 		glGetProgramInfoLog = (GLGETPROGRAMINFOLOG)LoadExtension( "glGetProgramInfoLog" );
 		glGetAttribLocation = (GLGETATTRIBLOCATION)LoadExtension( "glGetAttribLocation" );
 		glGetUniformLocation = (GLGETUNIFORMLOCATION)LoadExtension( "glGetUniformLocation" );
-
+		LoadExtension("GL_ARB_tessellation_shader");
 		glUniform1f = (GLUNIFORM1F)LoadExtension( "glUniform1f" );
 		glUniform2f = (GLUNIFORM2F)LoadExtension( "glUniform2f" );
 		glUniform3f = (GLUNIFORM3F)LoadExtension( "glUniform3f" );
